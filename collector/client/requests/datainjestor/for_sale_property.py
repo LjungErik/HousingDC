@@ -11,6 +11,6 @@ class DataInjestorForSalePropertyRequest(RequestBase):
     def __init__(self, time_location: str, payload):
         super().__init__(
             method_type="POST",
-            path="metrics/forsaleproperty",
+            path="data/housing/forsale",
             payload=payload,
             params={"timeLocation": time_location})
