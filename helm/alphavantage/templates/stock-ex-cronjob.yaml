@@ -1,0 +1,43 @@
+{{ if .Values.alphavantage.extended.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: alphavantage-intraday-extended
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: alphavantage-intraday-extended
+spec:
+  schedule: {{ .Values.alphavantage.extended.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: alphavantage-intraday-ex-job
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            args:
+              - time-series-intraday-extended
+            env:
+              - name: COLLECTOR_CONFIG_PATH
+                value: /etc/collector/config.ini
+              - name: COLLECTOR_VERBOSE
+                value: {{ .Values.verbose | quote }}
+              - name: COLLECTOR_ALPHAVANTAGE_APIKEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.alphavantage.secret.name }}
+                    key: {{ .Values.alphavantage.secret.key }}
+            # readinessProbe:
+            #   ... handle readiness checks
+            # livenessProbe:
+            #   ... handle liveness checks
+            volumeMounts:
+              - name: config
+                mountPath: /etc/collector
+          restartPolicy: {{ .Values.fanniemae.restartPolicy }}
+          volumes:
+          - name: config
+            configMap:
+              name: alphavantage-intraday-ex-job-config
+{{ end }}

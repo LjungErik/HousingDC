@@ -1,0 +1,38 @@
+{{ if .Values.marketwatch.si.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: marketwatch-si
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: marketwatch-si
+spec:
+  schedule: {{ .Values.marketwatch.si.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: marketwatch-si-job
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            args: 
+              - market-watch-short-interest
+            env:
+              - name: COLLECTOR_CONFIG_PATH
+                value: /etc/collector/config.ini
+              - name: COLLECTOR_VERBOSE
+                value: {{ .Values.verbose | quote }}
+            # readinessProbe:
+            #   ... handle readiness checks
+            # livenessProbe:
+            #   ... handle liveness checks
+            volumeMounts:
+              - name: config
+                mountPath: /etc/collector
+          restartPolicy: {{ .Values.marketwatch.restartPolicy }}
+          volumes:
+          - name: config
+            configMap:
+              name: marketwatch-config
+{{ end }}

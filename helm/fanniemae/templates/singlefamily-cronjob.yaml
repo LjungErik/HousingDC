@@ -1,0 +1,48 @@
+{{ if .Values.fanniemae.latest.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: fanniemae-latest-sf
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: fanniemae-latest-sf
+spec:
+  schedule: {{ .Values.fanniemae.latest.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: fanniemae-latest-sf-job
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            args: 
+              - latest-fanniemae-single-family
+            env:
+              - name: COLLECTOR_CONFIG_PATH
+                value: /etc/collector/config.ini
+              - name: COLLECTOR_VERBOSE
+                value: {{ .Values.verbose | quote }}
+              - name: COLLECTOR_FANNIEMAE_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.fanniemae.secret.name }}
+                    key: {{ .Values.fanniemae.secret.key.username }}
+              - name: COLLECTOR_FANNIEMAE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.fanniemae.secret.name }}
+                    key: {{ .Values.fanniemae.secret.key.password }}
+            # readinessProbe:
+            #   ... handle readiness checks
+            # livenessProbe:
+            #   ... handle liveness checks
+            volumeMounts:
+              - name: config
+                mountPath: /etc/collector
+          restartPolicy: {{ .Values.fanniemae.restartPolicy }}
+          volumes:
+          - name: config
+            configMap:
+              name: fanniemae-sf-config
+{{ end }}

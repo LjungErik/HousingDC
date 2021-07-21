@@ -1,0 +1,10 @@
+[FORMAT]
+max-line-length=180
+
+# Disable
+disable=wrong-import-position,
+        logging-fstring-interpolation,
+        invalid-name,
+        too-few-public-methods,
+        duplicate-code,
+        no-method-argument,

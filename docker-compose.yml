@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+    collector:
+        build: .
+        entrypoint: python -m collector hemnet-latest-for-sale-properties
+        volumes:
+            - ./private-compose-config.ini:/etc/collector/config.ini
+            - ./test-symbols.json:/etc/collector/symbols.json
+        environment:
+            - COLLECTOR_CONFIG_PATH=/etc/collector/config.ini
+            - COLLECTOR_VERBOSE=true
+        depends_on: 
+            - testapi
+    testapi:
+        image: alpine:3.13.5
+        volumes:
+            - ./testapi.sh:/testapi.sh
+        command: sh -c "
+            chmod +x /testapi.sh
+            && /testapi.sh
+            "

@@ -1,0 +1,22 @@
+verbose: false
+
+image:
+  repository: "developdockerstate/datacollector"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+datainjestor:
+  uri: http://localtest
+
+alphavantage:
+  uri: https://localtest
+  extended:
+    enabled: false
+    schedule: "*/1 * * * *"
+
+  secret:
+    name: alphavantage-secret
+    key: api-key
+  
+  restartPolicy: OnFailure
+
