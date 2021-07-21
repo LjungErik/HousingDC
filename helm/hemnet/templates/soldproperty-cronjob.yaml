@@ -1,38 +1,28 @@
-{{ if .Values.fanniemae.latest.enabled }}
+{{ if .Values.hement.sold.latest.enabled }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: fanniemae-latest-sf
+  name: hemnet-sold-latest
   namespace: {{ .Release.Namespace }}
   labels:
-    app: fanniemae-latest-sf
+    app: hemnet-sold-latest
 spec:
-  schedule: {{ .Values.fanniemae.latest.schedule }}
+  schedule: {{ .Values.hemnet.sold.latest.schedule }}
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: fanniemae-latest-sf-job
+          - name: hemnet-sold-latest-job
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             args: 
-              - latest-fanniemae-single-family
+              - hemnet-latest-sold-properties
             env:
               - name: COLLECTOR_CONFIG_PATH
                 value: /etc/collector/config.ini
               - name: COLLECTOR_VERBOSE
                 value: {{ .Values.verbose | quote }}
-              - name: COLLECTOR_FANNIEMAE_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.fanniemae.secret.name }}
-                    key: {{ .Values.fanniemae.secret.key.username }}
-              - name: COLLECTOR_FANNIEMAE_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.fanniemae.secret.name }}
-                    key: {{ .Values.fanniemae.secret.key.password }}
             # readinessProbe:
             #   ... handle readiness checks
             # livenessProbe:
@@ -40,9 +30,9 @@ spec:
             volumeMounts:
               - name: config
                 mountPath: /etc/collector
-          restartPolicy: {{ .Values.fanniemae.restartPolicy }}
+          restartPolicy: {{ .Values.hemnet.restartPolicy }}
           volumes:
           - name: config
             configMap:
-              name: fanniemae-sf-config
+              name: hemnet-config
 {{ end }}

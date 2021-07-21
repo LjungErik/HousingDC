@@ -1,23 +1,23 @@
-{{ if .Values.marketwatch.si.enabled }}
+{{ if .Values.hement.forsale.latest.enabled }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: marketwatch-si
+  name: hemnet-forsale-latest
   namespace: {{ .Release.Namespace }}
   labels:
-    app: marketwatch-si
+    app: hemnet-forsale-latest
 spec:
-  schedule: {{ .Values.marketwatch.si.schedule }}
+  schedule: {{ .Values.hemnet.forsale.latest.schedule }}
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: marketwatch-si-job
+          - name: hemnet-forsale-latest-job
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             args: 
-              - market-watch-short-interest
+              - hemnet-latest-for-sale-properties
             env:
               - name: COLLECTOR_CONFIG_PATH
                 value: /etc/collector/config.ini
@@ -30,9 +30,9 @@ spec:
             volumeMounts:
               - name: config
                 mountPath: /etc/collector
-          restartPolicy: {{ .Values.marketwatch.restartPolicy }}
+          restartPolicy: {{ .Values.hemnet.restartPolicy }}
           volumes:
           - name: config
             configMap:
-              name: marketwatch-config
+              name: hemnet-config
 {{ end }}

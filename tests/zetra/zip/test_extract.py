@@ -1,7 +1,7 @@
 """
 Test class for testing zip extractor
 """
-from os import listdir, mkdir, rmdir
+from os import listdir, mkdir
 from os.path import isfile, join, exists
 from shutil import rmtree
 

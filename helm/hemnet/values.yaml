@@ -1,0 +1,27 @@
+verbose: false
+
+image:
+  repository: "developdockerstate/housing-collector"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+datainjestor:
+  uri: http://localtest
+
+ratelimiter:
+  timeintervalsec: 60
+  maxactions: 5
+
+hemnet:
+  forsale:
+    latest:
+      enabled: false
+      schedule: "*/1 * * * *"
+  sold:
+    latest:
+      enabled: false
+      schedule: "*/1 * * * *"
+
+  uri: https://local
+  
+  restartPolicy: OnFailure
