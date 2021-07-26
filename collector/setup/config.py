@@ -22,6 +22,7 @@ class Config():
         self.user_agent = None
         self.injestor_api_uri = None
         self.hemnet_base_uri = None
+        self.redis_uri = None
 
     def load_configuration(self):
         """
@@ -43,7 +44,7 @@ class Config():
         self.action_tracker = ActionTracker(collector_id ,time_interval_sec, max_actions)
         self.user_agent = env_conf.get("Collector", "UserAgent", "DeapSeaShark/0.6.0")
         logger.info(f"Collector.UserAgent: {self.user_agent}")
-        
+
         self.injestor_api_uri = env_conf.get("Collector", "InjestorApiUri")
         if self.injestor_api_uri is None:
             raise ValueError("Collector.InjestorApiUri")
@@ -51,6 +52,9 @@ class Config():
 
         self.hemnet_base_uri = env_conf.get("Hemnet", "Uri")
         logger.info(f"Hemnet.Uri: {self.hemnet_base_uri}")
+
+        self.redis_uri = env_conf.get("Redis", "Uri")
+        logger.info(f"Redis.Uri: {self.redis_uri}")
 
 
 config = Config()

@@ -17,6 +17,7 @@ def test_parse_house():
     info = response.model
     assert info.address == "Brömsebrovägen 57"
     assert info.city == "Karlskrona"
+    assert info.ask_price == 850000.0
     assert info.accommodation_type == "Villa"
     assert info.form_of_tenure == "Äganderätt"
     assert info.number_of_rooms == 7.0
@@ -47,6 +48,7 @@ def test_parse_apartment():
     assert info.address == "Flygarvägen 39"
     assert info.area == "Barkarby"
     assert info.city == "Järfälla"
+    assert info.ask_price == 2790000.0
     assert info.accommodation_type == "Lägenhet"
     assert info.form_of_tenure == "Bostadsrätt"
     assert info.number_of_rooms == 3.0
@@ -76,6 +78,7 @@ def test_parse_gard():
     info = response.model
     assert info.address == "Ragunda Höglunda 1:80"
     assert info.city == "Ragunda"
+    assert info.ask_price == 22000000.0
     assert info.accommodation_type == "Gård/skog"
     assert info.form_of_tenure == "Äganderätt"
     assert info.plot_size == {"value": 495.2, "unit": "ha"}
@@ -99,6 +102,7 @@ def test_parse_tomt():
     info = response.model
     assert info.address == "Daggstigen 29A"
     assert info.city == "Huddinge"
+    assert info.ask_price == 3950000.0
     assert info.accommodation_type == "Tomt"
     assert info.form_of_tenure == "Äganderätt"
     assert info.plot_size == {"value": 980.0, "unit": "sqm"}
@@ -123,6 +127,7 @@ def test_parse_radhus():
     assert info.address == "Getingstigen 3B"
     assert info.area == "Örbäcken"
     assert info.city == "Västervik"
+    assert info.ask_price == 1250000.0
     assert info.accommodation_type == "Radhus"
     assert info.form_of_tenure == "Tomträtt"
     assert info.number_of_rooms == 5.0
@@ -152,6 +157,7 @@ def test_parse_fritidshus():
     assert info.address == "Gräddö  /  Fagervik"
     assert info.area == "Addeboda"
     assert info.city == "Norrtälje"
+    assert info.ask_price == 4195000.0
     assert info.accommodation_type == "Fritidshus"
     assert info.form_of_tenure == "Äganderätt"
     assert info.number_of_rooms == 4.0
@@ -177,6 +183,7 @@ def test_parse_ovrigt():
     assert info.address == "Sjöbod på Väjerns hamnplan"
     assert info.area == "Väjern"
     assert info.city == "Sotenäs"
+    assert info.ask_price == 1995000.0
     assert info.accommodation_type == "Övrig"
     assert info.form_of_tenure == "Annat"
     assert info.plot_size == {"value": 72.0, "unit": "sqm"}
