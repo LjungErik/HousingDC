@@ -22,6 +22,7 @@ class Config():
         self.user_agent = None
         self.injestor_api_uri = None
         self.hemnet_base_uri = None
+        self.hemnet_max_pages = None
         self.redis_uri = None
 
     def load_configuration(self):
@@ -52,6 +53,9 @@ class Config():
 
         self.hemnet_base_uri = env_conf.get("Hemnet", "Uri")
         logger.info(f"Hemnet.Uri: {self.hemnet_base_uri}")
+
+        self.hemnet_max_pages = int(env_conf.get("Hemnet", "MaxPages", 50))
+        logger.info(f"Hemnet.MaxPages: {self.hemnet_max_pages}")
 
         self.redis_uri = env_conf.get("Redis", "Uri")
         logger.info(f"Redis.Uri: {self.redis_uri}")

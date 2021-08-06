@@ -19,9 +19,10 @@ from collector.client.requests.hemnet.sold_property import SoldPropertyRequest
 from collector.client.response.hemnet.sold_list import SoldListResponse
 from collector.client.response.hemnet.sold_property import SoldPropertyResponse
 
+from collector.services.extractor.hemnet.base import get_unseen
+
 _TIME_LOCATION = "CET"
 _HOUSING_LATEST_KEY = "housing:sold:latest"
-_MAX_PAGES=50
 
 class LatestSoldExtractor(BaseExtractor):
     """
@@ -33,18 +34,19 @@ class LatestSoldExtractor(BaseExtractor):
         self._injestor = DataInjestorClient(config.injestor_api_uri, config.collector_id)
         self._redis = RedisClient(config.redis_uri)
         self._max_current = config.action_tracker.max_actions
+        self._max_pages = config.hemnet_max_pages
 
     async def _extract_response(self):
-        self._redis.setup_pool()
-        latest_fetched_ids = self._redis.get_json(_HOUSING_LATEST_KEY, default=[])
+        await self._redis.setup_pool()
+        latest_fetched_ids = await self._redis.get_json(_HOUSING_LATEST_KEY, default=[])
         first_page_ids = None
-        for i in range(1,_MAX_PAGES+1):
+        for i in range(1,self._max_pages+1):
             req = LatestSoldListRequest(page=i)
             logger.info(f"Fetching list of Sold list on page: {i}")
             html_data = await self._client.send(req, CookieJar())
             resp = SoldListResponse(html_data)
             links = resp.get_data()
-            new_links, seen_before = self._get_unseen(latest_fetched_ids, links)
+            new_links, seen_before = get_unseen(latest_fetched_ids, links)
 
             # if new links found then save first page ids for later
             if len(new_links) > 0 and not first_page_ids:
@@ -77,11 +79,6 @@ class LatestSoldExtractor(BaseExtractor):
             resp = SoldPropertyResponse(item["id"], html_data)
             injest_req = DataInjestorSoldPropertyRequest(_TIME_LOCATION, resp.model.json())
             await self._injestor.send(injest_req)
-
-    def _get_unseen(self, latest_fetched_ids, links):
-        new_links = [l for l in links if l["id"] not in latest_fetched_ids]
-        # returns new links and if any links had been seen before
-        return new_links, len(new_links) == len(links)
 
     def execute(self):
         """

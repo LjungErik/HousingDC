@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: StatefulSet
+metadata:
+  name: redis-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: redis-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-master
+  serviceName: "redis-server-headless"
+  template:
+    metadata:
+      labels:
+        app: redis-master
+    annotations:
+      checksum/configmap: {{ include (print $.Template.BasePath "/redis-configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: redis-statefulset
+        image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+        env:
+          - name: REDIS_PORT
+            value: {{ .Values.redis.containerPort | quote }}
+        ports:
+        - containerPort: {{ .Values.redis.containerPort }}
+          name: redis
+        volumeMounts:
+          - name: config-volume
+            mountPath: /usr/local/etc/redis/redis.conf
+          - name: redis-data-pvc
+            mountPath: {{ .Values.redis.workingdir }}
+      restartPolicy: {{ .Values.redis.restartPolicy }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: redis-server-config

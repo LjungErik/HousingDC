@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-server-config
+  namespace: {{ .Release.Namespace }}
+data:
+  redis.conf: |-
+    # Enable AOF
+    appendonly yes
+    # The name of the Append Only File
+
+    appendfilename "appendonly.aof"
+
+    # Disable RDB persistance, AOF persistence only
+    save ""
+    # The working directory
+    dir {{ .Values.redis.workingdir }}

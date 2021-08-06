@@ -24,6 +24,7 @@ class ForSalePropertyBrokerModel(BaseModel):
         ## Remove all keys with values that are none
         return {k: v for k, v in data.items() if v}
 
+# pylint: disable=too-many-instance-attributes
 class ForSalePropertyModel(BaseModel):
     """
     For Sale Property Model

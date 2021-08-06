@@ -10,7 +10,19 @@ services:
             - COLLECTOR_CONFIG_PATH=/etc/collector/config.ini
             - COLLECTOR_VERBOSE=true
         depends_on: 
+            - redis
             - testapi
+    redis-commander:
+        image: rediscommander/redis-commander
+        restart: always
+        environment: 
+        - REDIS_HOSTS=local:redis:6379
+        ports:
+        - "8081:8081"
+        depends_on: 
+            - redis
+    redis:
+        image: redis:alpine3.14
     testapi:
         image: alpine:3.13.5
         volumes:

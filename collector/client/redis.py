@@ -23,7 +23,7 @@ class RedisClient():
         """
         Sets up connection pool to redis instance
         """
-        if self._pool or self._pool.closed:
+        if not self._pool or self._pool.closed:
             self._pool = await aioredis.create_pool(self._uri)
 
     async def close(self):
@@ -39,7 +39,7 @@ class RedisClient():
         """
         Execute specific command against redis instance
         """
-        if self._pool or self._pool.closed:
+        if not self._pool or self._pool.closed:
             raise ValueError("Redis connection Pool not setup")
 
         return await self._execute(command, *args, **kwargs)
@@ -48,7 +48,7 @@ class RedisClient():
         """
         Execute command to get json object from redis value with key
         """
-        if self._pool or self._pool.closed:
+        if not self._pool or self._pool.closed:
             raise ValueError("Redis connection Pool not setup")
 
         return await self._get_json(key, default)
@@ -57,7 +57,7 @@ class RedisClient():
         """
         Executes command to set json object for key in redis
         """
-        if self._pool or self._pool.closed:
+        if not self._pool or self._pool.closed:
             raise ValueError("Redis connection Pool not setup")
 
         return await self._set_json(key, json_obj)
@@ -70,8 +70,15 @@ class RedisClient():
     async def _get_json(self, key, default=None):
         try:
             json_str = await self._pool.execute("get", key)
+            if not json_str:
+                logger.info(f"Failed to get key:{key}")
+                return default
+
+            logger.info(f"Found {key}:{json_str}")
+
             return json.loads(json_str)
-        except aioredis.RedisError:
+        except aioredis.RedisError as e:
+            logger.warning(f"Error in redis: {e}")
             return default
 
     @retry(max_retry=3, wait_time_func=expo_wait_time)

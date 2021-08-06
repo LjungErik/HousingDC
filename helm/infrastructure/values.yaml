@@ -1,0 +1,11 @@
+
+
+redis:
+  image:
+    repository: redis
+    tag: alpine3.14
+    pullPolicy: IfNotPresent
+
+  containerPort: 6379
+  restartPolicy: OnFailure
+  workingdir: /etc/redis/data

@@ -7,6 +7,7 @@ import os
 import logging
 import argparse
 
+formatter = logging.Formatter("[%(asctime)s] - [%(levelname)s]: %(message)s")
 loglevel = logging.INFO
 if os.getenv("COLLECTOR_VERBOSE", "FALSE").upper() == "TRUE":
     loglevel = logging.DEBUG
@@ -15,6 +16,8 @@ logger = logging.getLogger()
 logger.setLevel(loglevel)
 
 ch = logging.StreamHandler()
+
+ch.setFormatter(formatter)
 ch.setLevel(loglevel)
 
 logger.addHandler(ch)
