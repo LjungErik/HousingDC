@@ -23,5 +23,9 @@ hemnet:
       schedule: "*/1 * * * *"
 
   uri: https://local
+  maxpages: 50
   
   restartPolicy: OnFailure
+
+redis:
+  uri: redis://local

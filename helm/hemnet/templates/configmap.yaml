@@ -16,3 +16,7 @@ data:
 
     [Hemnet]
     Uri={{ .Values.hemnet.uri }}
+    MaxPages={{ .Values.hemnet.maxpages }}
+
+    [Redis]
+    Uri={{ .Values.redis.uri }}
