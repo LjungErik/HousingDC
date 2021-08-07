@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-commander
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: redis-commander
+spec:
+  replicas: {{ .Values.rediscmd.replicaCount }}
+  selector:
+    matchLabels:
+      app: redis-commander
+  template:
+    metadata:
+      labels:
+        app: redis-commander
+    spec:
+      containers:
+      - name: redis-commander
+        image: "{{ .Values.rediscmd.image.repository }}:{{ .Values.rediscmd.image.tag }}"
+        imagePullPolicy: {{ .Values.rediscmd.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.rediscmd.containerPort }}
+        env:
+          - name: REDIS_HOSTS
+            value: local:redis-server-svc:6379
+          - name: PORT
+            value: {{ .Values.rediscmd.containerPort }}

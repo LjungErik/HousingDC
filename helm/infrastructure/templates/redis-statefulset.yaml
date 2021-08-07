@@ -9,12 +9,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis-master
+      app: redis-server
   serviceName: "redis-server-headless"
   template:
     metadata:
       labels:
-        app: redis-master
+        app: redis-server
     annotations:
       checksum/configmap: {{ include (print $.Template.BasePath "/redis-configmap.yaml") . | sha256sum }}
     spec:

@@ -9,3 +9,10 @@ redis:
   containerPort: 6379
   restartPolicy: OnFailure
   workingdir: /etc/redis/data
+
+rediscmd:
+  image:
+    repository: rediscommander/redis-commander
+    tag: latest
+    pullPolicy: IfNotPresent
+  containerPort: 8080
