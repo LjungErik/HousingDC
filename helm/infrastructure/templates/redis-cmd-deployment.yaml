@@ -24,6 +24,6 @@ spec:
             containerPort: {{ .Values.rediscmd.containerPort }}
         env:
           - name: REDIS_HOSTS
-            value: local:redis-server-svc:6379
+            value: local:redis-server:16379
           - name: PORT
-            value: {{ .Values.rediscmd.containerPort }}
+            value: {{ .Values.rediscmd.containerPort | quote }}

@@ -1,4 +1,4 @@
-{{ if .Values.hement.forsale.latest.enabled }}
+{{ if .Values.hemnet.forsale.latest.enabled }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:

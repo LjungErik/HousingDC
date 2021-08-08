@@ -7,10 +7,11 @@ redis:
     pullPolicy: IfNotPresent
 
   containerPort: 6379
-  restartPolicy: OnFailure
+  restartPolicy: Always
   workingdir: /etc/redis/data
 
 rediscmd:
+  replicaCount: 1
   image:
     repository: rediscommander/redis-commander
     tag: latest
