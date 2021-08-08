@@ -1,7 +1,7 @@
 #!/bin/bash
 
 user="developdockerstate"
-name="datacollector"
+name="housing-collector"
 version="local"
 latest=false
 
