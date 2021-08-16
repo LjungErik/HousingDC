@@ -11,7 +11,7 @@ class LatestSoldListRequest(RequestBase):
     def __init__(self, page):
         super().__init__(
             method_type="GET",
-            path="bostader",
+            path="salda/bostader",
             parameters={
                 "page": page
             },
